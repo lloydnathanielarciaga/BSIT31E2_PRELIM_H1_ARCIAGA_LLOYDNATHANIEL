@@ -1,7 +1,4 @@
-﻿List<string> students = new List<string>();
-List<double> grades_1 = new List<double>();
-List<double> grades_2 = new List<double>();
-List<double> grades_3 = new List<double>();
+﻿List<Student> students = new List<Student>();
 
 while (true)
 {
@@ -12,7 +9,7 @@ while (true)
     Console.WriteLine("3. Compute Average Grade");
     Console.WriteLine("4. Find Highest Grade");
     Console.WriteLine("5. Exit");
-    Console.WriteLine("=========================");
+    Console.WriteLine("==========================");
     Console.Write("Choose an Option: ");
     string user_input = Console.ReadLine();
 
@@ -38,12 +35,18 @@ while (true)
         Console.Write("Enter grade 3: ");
         double add_grade_3 = double.Parse(Console.ReadLine());
 
-        Console.WriteLine("Student added successfully");
+        Student student = new Student();
 
-        students.Add(add_student);
-        grades_1.Add(add_grade_1);
-        grades_2.Add(add_grade_2);
-        grades_3.Add(add_grade_3);
+        student.SetStudent(
+            add_student,
+            add_grade_1,
+            add_grade_2,
+            add_grade_3
+            );
+
+        students.Add(student);
+
+        Console.WriteLine("Student added successfully");
     }
     else if (user_input == "2")
     {
@@ -51,16 +54,20 @@ while (true)
 
         for (int i = 0; i < students.Count; i++)
         {
-            double average = (grades_1[i] + grades_2[i] + grades_3[i]) / 3;
-
             Console.WriteLine("");
-            Console.WriteLine($"Name: {students[i]}");
-            Console.WriteLine($"Grades: {(int)grades_1[i]}, {(int)grades_2[i]}, {(int)grades_3[i]}");
-            Console.WriteLine($"Average: {average:F2}");
+            Console.WriteLine($"Name: {students[i].GetName()}");
+            Console.WriteLine($"Grades: {students[i].GetGrades()}");
+            Console.WriteLine($"Average: {students[i].ComputeAverage()}");
         }
     }
     else if (user_input == "3")
     {
+        if (students.Count == 0)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("No students found");
+            continue;
+        }
         Console.WriteLine("");
         Console.WriteLine("===== CLASS AVERAGE =====");
 
@@ -68,13 +75,12 @@ while (true)
 
         for (int i = 0; i < students.Count; i++)
         {
-            total += grades_1[i];
-            total += grades_2[i];
-            total += grades_3[i];
+            total += students[i].ComputeAverage();
         }
 
-        double overall_average = total / (students.Count * 3);
-        Console.WriteLine($"Overall Average Grade: {overall_average:F2}");
+        double overall_average = total / students.Count;
+
+        Console.WriteLine($"Overall Average Grade: {overall_average}");
     }
     else if (user_input == "4")
     {
@@ -82,56 +88,27 @@ while (true)
         {
             Console.WriteLine("");
             Console.WriteLine("No students found");
-            Console.WriteLine("Add students first to use this option");
-            Console.WriteLine("");
-            Console.Write("Enter student name: ");
-            string add_student = Console.ReadLine();
-
-            Console.Write("Enter grade 1: ");
-            double add_grade_1 = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter grade 2: ");
-            double add_grade_2 = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter grade 3: ");
-            double add_grade_3 = double.Parse(Console.ReadLine());
-
-            Console.WriteLine("Student added successfully");
-
-            students.Add(add_student);
-            grades_1.Add(add_grade_1);
-            grades_2.Add(add_grade_2);
-            grades_3.Add(add_grade_3);
+            Console.WriteLine("Add student first to use this option");
+            continue;
         }
 
-        double highest_grade = grades_1[0];
-        string highest_student = students[0];
+        double highest_grade = students[0].GetHighestGrade();
+        string highest_student = students[0].GetName();
 
         for (int i = 0; i < students.Count; i++)
         {
-            if (grades_1[i] > highest_grade)
+            if (students[i].GetHighestGrade() > highest_grade)
             {
-                highest_grade = grades_1[i];
-                highest_student = students[i];
-            }
-            if (grades_2[i] > highest_grade)
-            {
-                highest_grade = grades_2[i];
-                highest_student = students[i];
-            }
-            if (grades_3[i] > highest_grade)
-            {
-                highest_grade = grades_3[i];
-                highest_student = students[i];
+                highest_grade = students[i].GetHighestGrade();
+                highest_student = students[i].GetName();
             }
         }
-
         Console.WriteLine("");
         Console.WriteLine("===== HIGHEST GRADE =====");
         Console.WriteLine($"Top Student: {highest_student}");
-        Console.WriteLine($"Highest Grade: {highest_grade}");
+        Console.WriteLine($"Highest grade: {highest_grade}");
     }
-    else 
+    else
     {
         Console.WriteLine("Invalid Input");
     }
